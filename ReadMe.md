@@ -1,4 +1,3 @@
-
 ViaThinkSoft CallLib (MakeCall.dll) API
 =======================================
 
@@ -8,8 +7,8 @@ It contains only two functions which are described below:
 GetTapiDevices
 ==============
 
-Delphi: function GetTapiDevices(buf: PAnsiChar): integer; stdcall;
-C++:    int __stdcall GetTapiDevices(AnsiChar* buf);
+Delphi: `function GetTapiDevices(buf: PAnsiChar): integer; stdcall;`
+C++:    `int __stdcall GetTapiDevices(AnsiChar* buf);`
 
 GetTapiDevices lists all available TAPI devices.
 
@@ -23,8 +22,8 @@ If the result is -1, an error occured.
 MakeCall
 ========
 
-Delphi: function MakeCall(phoneNumber: PAnsiChar; deviceId: integer): integer; stdcall;
-C++:    int __stdcall MakeCall(AnsiChar* phoneNumber, int deviceId);
+Delphi: `function MakeCall(phoneNumber: PAnsiChar; deviceId: integer): integer; stdcall;`
+C++:    `int __stdcall MakeCall(AnsiChar* phoneNumber, int deviceId);`
 
 MakeCall requests the telephone to make a call.
 
