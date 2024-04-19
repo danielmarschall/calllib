@@ -28,13 +28,23 @@ implementation
 
 {$R *.dfm}
 
-function GetTapiDevices(buf: PAnsiChar): integer; stdcall; external 'MakeCall.dll';
-function MakeCall(phoneNumber: PAnsiChar; deviceId: integer): integer; stdcall; external 'MakeCall.dll';
+const
+  {$IFDEF WIN64}
+  makecalldll = 'MakeCall.64.dll';
+  {$ELSE}
+  makecalldll = 'MakeCall.32.dll';
+  {$ENDIF}
 
-type
-  TAnsiCharArray = array of AnsiChar;
+{$IFDEF UNICODE}
+function GetTapiDevices(buf: PWideChar): integer; stdcall; external makecalldll name 'GetTapiDevicesW';
+function MakeCall(phoneNumber: PWideChar; deviceId: integer): integer; stdcall; external makecalldll name 'MakeCallW';
+{$ELSE}
+function GetTapiDevices(buf: PAnsiChar): integer; stdcall; external makecalldll name 'GetTapiDevicesA';
+function MakeCall(phoneNumber: PAnsiChar; deviceId: integer): integer; stdcall; external makecalldll name 'MakeCallA';
+{$ENDIF}
 
-function ArrayToString(const a: TAnsiCharArray): string;
+
+function ArrayToString(const a: TCharArray): string;
 begin
   if Length(a)>0 then
     SetString(Result, PChar(@a[0]), Length(a))
@@ -44,10 +54,10 @@ end;
 
 procedure TForm1.CallBtnClick(Sender: TObject);
 var
-  s: AnsiString;
+  s: String;
 begin
   s := PhoneNumberEdit.Text;
-  MakeCall(PAnsiChar(s), DeviceListBox.ItemIndex);
+  MakeCall(PChar(s), DeviceListBox.ItemIndex);
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
@@ -68,11 +78,11 @@ end;
 procedure TForm1.ListDevices;
 var
   len: integer;
-  buf: TAnsiCharArray;
+  buf: TCharArray;
 begin
   len := GetTapiDevices(nil);
   SetLength(buf, len+1);
-  GetTapiDevices(PAnsiChar(buf));
+  GetTapiDevices(PChar(buf));
   DeviceListBox.Items.Text := ArrayToString(buf);
 end;
 
